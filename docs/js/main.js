@@ -179,7 +179,7 @@ function renderShowLists(now) {
   const nextId = upcoming[0];
   const li = (s, isNext) => {
     const d = isoToUtcNoon(s.start);
-    const pills = (isNext ? '<span class="pill nxt">Next</span>' : '') + (s.projected ? '<span class="pill proj">Projected</span>' : '');
+    const pills = (isNext ? `<span class="pill nxt">${s.firstOpen <= now ? 'Happening now' : 'Next'}</span>` : '') + (s.projected ? '<span class="pill proj">Projected</span>' : '');
     return `<li class="${isNext ? 'next' : ''}">
       <span class="cal" aria-hidden="true"><span class="mo">${monFmt.format(d)}</span><span class="dy">${d.getUTCDate()}</span></span>
       <span class="show-meta"><strong>${esc(s.name)}${pills}</strong><span>${esc(s.where)} · ${rangeLabel(s)}</span></span>
