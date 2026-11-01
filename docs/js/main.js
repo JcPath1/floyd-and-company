@@ -68,6 +68,7 @@ const PRODUCTS = [
 
 // ---------- SHOWS ----------
 // Dates are in East Texas (Central) time. First Monday runs Thursday–Sunday.
+// Optional per show: hours (text shown to customers). On the real site these come from the admin area.
 const SHOWS = [
   { name: 'First Monday Trade Days', where: 'Canton, TX', start: '2026-10-01', end: '2026-10-04' },
   { name: 'First Monday Trade Days', where: 'Canton, TX', start: '2026-10-29', end: '2026-11-01' },
@@ -233,7 +234,7 @@ function tick() {
     $('#heroShowName').textContent = s.name;
     $('#boardName').textContent = s.name;
     $('#heroShowWhere').textContent = s.where;
-    $('#boardWhere').textContent = s.where + ' · 8 AM to 5 PM, Sunday until 4 PM';
+    $('#boardWhere').textContent = s.where + ' · ' + (s.hours || '8 AM to 5 PM, Sunday until 4 PM');
     const dates = rangeLabel(s) + (s.projected ? ' (projected)' : '');
     $('#heroShowDates').textContent = dates;
     $('#boardDates').textContent = dates;
