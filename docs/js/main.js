@@ -9,60 +9,81 @@ const PRODUCTS = [
     name: 'Stink Stank Stunk Christmas Sign',
     price: 70, confirmed: true, cat: 'christmas', badge: 'Best seller',
     img: 'images/stink-stank-stunk.jpg', w: 1100, h: 552,
+    photos: [
+      ['images/stink-stank-stunk.jpg', 'Full sign'],
+      ['images/stink-stank-stunk-closeup.jpg', 'Close-up of the layered lettering'],
+      ['images/stink-stank-stunk-corner.jpg', 'Corner detail and stained frame']
+    ],
     short: 'Layered, hand-painted holiday sign in a dark stained frame.',
     desc: [
       'Our most popular holiday piece. Every letter, star, ornament and holly leaf is cut out on its own, painted by hand and layered onto a whitewashed shiplap board, so the design stands up off the sign in real 3D.',
       'Finished with a dark stained wood frame. It looks great over a mantel, in an entryway, or anywhere that needs some Grinchy Christmas cheer.'
     ],
-    details: [['Style', 'Layered wood cutouts on a whitewashed board'], ['Frame', 'Dark stained wood'], ['Colors', 'Christmas red, green and gold']]
+    details: [['Size', '36 × 18 in (sample)'], ['Style', 'Layered wood cutouts on a whitewashed board'], ['Frame', 'Dark stained wood'], ['Colors', 'Christmas red, green and gold']]
   },
   {
     id: 'grinch-quote',
     name: 'How the Grinch Stole Christmas Quote Sign',
     price: 75, confirmed: true, cat: 'christmas',
     img: 'images/grinch-quote.jpg', w: 827, h: 1100,
+    photos: [
+      ['images/grinch-quote.jpg', 'Full sign'],
+      ['images/grinch-quote-closeup.jpg', 'Close-up of the raised title letters']
+    ],
     short: 'The classic “maybe Christmas means a little bit more” passage, framed.',
     desc: [
       'The famous ending from How the Grinch Stole Christmas, where he figures out that Christmas doesn’t come from a store. The title letters are cut out and raised in red and green, and the full passage is lettered underneath on a clean white board.',
       'Set in a natural stained wood frame. A favorite for families who read the book every December.'
     ],
-    details: [['Style', 'Raised cutout title, lettered quote'], ['Frame', 'Natural stained wood'], ['Hangs', 'Portrait (taller than wide)']]
+    details: [['Size', '18 × 24 in (sample)'], ['Style', 'Raised cutout title, lettered quote'], ['Frame', 'Natural stained wood'], ['Hangs', 'Portrait (taller than wide)']]
   },
   {
     id: 'believe',
     name: 'Believe in the Magic of Christmas',
     price: 40, confirmed: false, cat: 'christmas',
     img: 'images/believe.jpg', w: 1100, h: 708,
+    photos: [
+      ['images/believe.jpg', 'Full sign'],
+      ['images/believe-closeup.jpg', 'Close-up of the script and lettering']
+    ],
     short: 'Flowing red script sign with a simple holiday message.',
     desc: [
       'A big, flowing “Believe” cut from wood and painted a rich Christmas red, raised above the words “In the Magic of Christmas” on a white board.',
       'Simple and clean, so it fits with any holiday decorating style. Hang it on the wall or lean it on a shelf with your Christmas decorations.'
     ],
-    details: [['Style', 'Raised script cutout on a white board'], ['Colors', 'Christmas red and black on white'], ['Season', 'Christmas']]
+    details: [['Size', '24 × 15 in (sample)'], ['Style', 'Raised script cutout on a white board'], ['Colors', 'Christmas red and black on white'], ['Season', 'Christmas']]
   },
   {
     id: 'tx-sign',
     name: 'TX Lone Star Sign',
     price: 65, confirmed: false, cat: 'texas',
     img: 'images/tx-sign.jpg', w: 1091, h: 1100,
+    photos: [
+      ['images/tx-sign.jpg', 'Full sign'],
+      ['images/tx-sign-closeup.jpg', 'Close-up of the Texas cutout and star']
+    ],
     short: 'Oversized TX letters with a natural-wood Texas cutout.',
     desc: [
       'Texas pride you can hang on the wall. Big white “TX” letters on a dark painted board, with a natural-wood cutout of the state in the middle and a lone star cut right through it.',
       'Square, bold and easy to read from across the room. Made for living rooms, game rooms, offices and ranch-style entryways. A good year-round piece.'
     ],
-    details: [['Style', 'Layered letters with a state cutout'], ['Colors', 'White and natural wood on charcoal'], ['Shape', 'Square']]
+    details: [['Size', '24 × 24 in (sample)'], ['Style', 'Layered letters with a state cutout'], ['Colors', 'White and natural wood on charcoal'], ['Shape', 'Square']]
   },
   {
     id: 'nhl-map',
     name: 'NHL Arena Travel Map',
     price: 175, confirmed: false, cat: 'sports',
     img: 'images/nhl-map.jpg', w: 1100, h: 757,
+    photos: [
+      ['images/nhl-map.jpg', 'Full map'],
+      ['images/nhl-map-closeup.jpg', 'Close-up of the engraved arenas and NHL shield']
+    ],
     short: 'Laser-cut map of every NHL arena for the traveling hockey fan.',
     desc: [
       'A layered, laser-cut wood map of every NHL arena in the US and Canada. Each arena has a puck-shaped spot with its name engraved beside it, so you can keep track of every rink you’ve been to.',
       'The border is carved with skating players, goalie masks, sticks, and the US and Canadian flags, all set in a dark stained frame. A great gift for the hockey fan who travels to games.'
     ],
-    details: [['Style', 'Multi-layer laser-cut and engraved wood'], ['Frame', 'Dark stained wood'], ['Covers', 'US and Canadian NHL arenas']]
+    details: [['Size', '36 × 24 in (sample)'], ['Style', 'Multi-layer laser-cut and engraved wood'], ['Frame', 'Dark stained wood'], ['Covers', 'US and Canadian NHL arenas']]
   }
 ];
 
@@ -255,6 +276,7 @@ function renderProducts() {
         <img src="${p.img}" alt="${esc(p.name)}" width="${p.w}" height="${p.h}" loading="lazy">
         ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}
         ${priceTag(p)}
+        ${p.photos && p.photos.length > 1 ? `<span class="photo-count">${p.photos.length} photos</span>` : ''}
       </button>
       <div class="product-body">
         <h3><button type="button" data-open="${p.id}">${esc(p.name)}</button></h3>
@@ -281,12 +303,17 @@ function openProduct(id) {
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
   closeProduct();
+  const photos = p.photos && p.photos.length ? p.photos : [[p.img, p.name]];
   modalEl = document.createElement('div');
   modalEl.className = 'modal-scrim';
   modalEl.innerHTML = `
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button type="button" class="close-btn modal-close" data-close>Close</button>
-      <div class="modal-photo"><img src="${p.img}" alt="${esc(p.name)}" width="${p.w}" height="${p.h}"></div>
+      <div class="modal-photo">
+        <div class="modal-main"><img id="modalMain" src="${p.img}" alt="${esc(p.name)}"></div>
+        ${photos.length > 1 ? `<div class="thumbs" role="group" aria-label="Product photos">${photos.map(([src, cap], i) => `<button type="button" class="thumb${i === 0 ? ' is-on' : ''}" data-photo="${i}" aria-label="Show photo: ${esc(cap)}"><img src="${src}" alt=""></button>`).join('')}</div>` : ''}
+        <p class="photo-cap" id="modalCap">${esc(photos[0][1])}</p>
+      </div>
       <div class="modal-info">
         <h2 id="modalTitle">${esc(p.name)}</h2>
         <p class="modal-price">$${p.price}${p.confirmed ? '' : '<small>sample price</small>'}</p>
@@ -301,7 +328,17 @@ function openProduct(id) {
     </div>`;
   document.body.appendChild(modalEl);
   document.body.classList.add('locked');
-  modalEl.addEventListener('click', e => { if (e.target === modalEl || e.target.closest('[data-close]')) closeProduct(); });
+  modalEl.addEventListener('click', e => {
+    if (e.target === modalEl || e.target.closest('[data-close]')) { closeProduct(); return; }
+    const t = e.target.closest('[data-photo]');
+    if (t) {
+      const [src, cap] = photos[+t.dataset.photo];
+      $('#modalMain', modalEl).src = src;
+      $('#modalMain', modalEl).alt = p.name + ': ' + cap;
+      $('#modalCap', modalEl).textContent = cap;
+      $$('.thumb', modalEl).forEach(b => b.classList.toggle('is-on', b === t));
+    }
+  });
   $('[data-close]', modalEl).focus();
 }
 function closeProduct() {
