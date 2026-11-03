@@ -84,6 +84,18 @@ const PRODUCTS = [
       'The border is carved with skating players, goalie masks, sticks, and the US and Canadian flags, all set in a dark stained frame. A great gift for the hockey fan who travels to games.'
     ],
     details: [['Size', '36 × 24 in (sample)'], ['Style', 'Multi-layer laser-cut and engraved wood'], ['Frame', 'Dark stained wood'], ['Covers', 'US and Canadian NHL arenas']]
+  },
+  {
+    id: 'laws-of-man',
+    name: 'I Don’t Need the Laws of Man Sign',
+    price: null, comingSoon: true, cat: 'texas', badge: 'Coming soon',
+    img: 'images/laws-of-man-coming-soon.jpg', w: 829, h: 1100,
+    short: 'Our newest western design, with a bronc rider cutout.',
+    desc: [
+      'Our newest design: “I don’t need the laws of man to tell me what I ought to do,” in bold western lettering with a cut-out bronc rider breaking through the middle.',
+      'It’s still being finished in our workshop. Look for it at our next show, or check back here to order once it’s ready.'
+    ],
+    details: [['Size', 'To be announced'], ['Style', 'Raised western lettering with a bronc rider cutout'], ['Status', 'Coming soon']]
   }
 ];
 
@@ -114,15 +126,13 @@ const REVIEWS = [
 
 // ---------- GALLERY ----------
 const GALLERY = [
-  { img: 'images/stink-stank-stunk.jpg', cap: 'Stink Stank Stunk, ready for the Christmas season', cls: 'wide' },
-  { img: 'images/grinch-quote.jpg', cap: 'Grinch quote sign in a natural stained frame', cls: 'tall' },
-  { empty: 'Our booth at First Monday', note: 'Booth photo goes here' },
-  { img: 'images/tx-sign.jpg', cap: 'TX Lone Star sign' },
-  { img: 'images/nhl-map.jpg', cap: 'NHL Arena Travel Map', cls: 'wide' },
-  { empty: 'Setting up in Canton', note: 'Show photo goes here' },
-  { img: 'images/believe.jpg', cap: 'Believe in the Magic of Christmas' },
-  { empty: 'Holiday display', note: 'Show photo goes here' },
-  { empty: 'Customers at the booth', note: 'Show photo goes here' }
+  { img: 'images/great-lakes-map.jpg', cap: 'Great Lakes depth map, layered and painted in shades of blue', cls: 'big' },
+  { img: 'images/booth-map-wall.jpg', cap: 'A full wall of our laser-cut travel maps', cls: 'tall' },
+  { img: 'images/booth-believe.jpg', cap: 'Christmas signs and a North Pole display at our booth', cls: 'tall' },
+  { img: 'images/booth-st-nicks.jpg', cap: 'St. Nick’s, “You Serious Clark?” and more holiday signs', cls: 'tall' },
+  { img: 'images/booth-gingerbread.jpg', cap: 'Gingerbread Bakery and farmhouse signs on display', cls: 'tall' },
+  { img: 'images/booth-thankful.jpg', cap: 'Thankful and Blessed fall sign', cls: 'tall' },
+  { img: 'images/booth-maps-corner.jpg', cap: 'State maps, US maps and Amazing Grace signs', cls: 'tall' }
 ];
 
 // =====================================================================
@@ -267,6 +277,7 @@ function tick() {
 
 // ---------- Products ----------
 function priceTag(p) {
+  if (p.comingSoon) return '<span class="price-tag soon">Soon!</span>';
   return `<span class="price-tag">$${p.price}${p.confirmed ? '' : '<small>sample</small>'}</span>`;
 }
 function renderProducts() {
@@ -283,7 +294,7 @@ function renderProducts() {
         <p>${esc(p.short)}</p>
         <div class="product-actions">
           <button type="button" class="btn btn-outline" data-open="${p.id}">Details</button>
-          <button type="button" class="btn btn-dark" data-add="${p.id}">Add to cart</button>
+          ${p.comingSoon ? '<button type="button" class="btn btn-dark" disabled>Coming soon</button>' : `<button type="button" class="btn btn-dark" data-add="${p.id}">Add to cart</button>`}
         </div>
       </div>
     </article>`).join('');
@@ -316,14 +327,14 @@ function openProduct(id) {
       </div>
       <div class="modal-info">
         <h2 id="modalTitle">${esc(p.name)}</h2>
-        <p class="modal-price">$${p.price}${p.confirmed ? '' : '<small>sample price</small>'}</p>
+        <p class="modal-price">${p.comingSoon ? 'Coming soon' : `$${p.price}${p.confirmed ? '' : '<small>sample price</small>'}`}</p>
         <div class="modal-desc">${p.desc.map(t => `<p>${esc(t)}</p>`).join('')}</div>
         <ul class="modal-details">
           ${p.details.map(([k, v]) => `<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join('')}
           <li><b>Made by</b><span>Hand, by the Floyd family in East Texas</span></li>
           <li><b>Get it</b><span>Pick up free at our next show, or have it shipped</span></li>
         </ul>
-        <button type="button" class="btn btn-dark full" data-add="${p.id}">Add to cart · $${p.price}</button>
+        ${p.comingSoon ? '<p class="soon-note">Not ready to order yet. Ask about it at our next show.</p>' : `<button type="button" class="btn btn-dark full" data-add="${p.id}">Add to cart · $${p.price}</button>`}
       </div>
     </div>`;
   document.body.appendChild(modalEl);
@@ -354,7 +365,7 @@ try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}') || {}; } catch (
 function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* storage blocked: cart still works for this visit */ } }
 
 function renderCart() {
-  const ids = Object.keys(cart).filter(id => cart[id] > 0 && PRODUCTS.some(p => p.id === id));
+  const ids = Object.keys(cart).filter(id => cart[id] > 0 && PRODUCTS.some(p => p.id === id && !p.comingSoon));
   const count = ids.reduce((n, id) => n + cart[id], 0);
   $('#cartCount').textContent = count;
   let total = 0;
